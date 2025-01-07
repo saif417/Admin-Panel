@@ -1,0 +1,13 @@
+.container {
+    max-width: 800px;
+    margin: auto;
+  }
+  
+  .table {
+    margin-top: 20px;
+  }
+  
+  input {
+    width: 100%;
+    max-width: 400px;
+  }

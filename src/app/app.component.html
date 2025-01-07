@@ -1,0 +1,141 @@
+<div class="container mt-4">
+  <h2>Admin Panel</h2>
+
+  <input
+    type="text"
+    class="form-control mb-3"
+    placeholder="Search by name or email"
+    [(ngModel)]="searchTerm"
+    (ngModelChange)="searchUsers()"
+  />
+
+  <table class="table table-bordered table-striped">
+    <thead>
+      <tr>
+        <th>User ID</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of paginatedUsers">
+        <td>{{ user.id }}</td>
+        <td>
+          <span *ngIf="editingUserId !== user.id">{{ user.name }}</span>
+          <input
+            *ngIf="editingUserId === user.id"
+            type="text"
+            [(ngModel)]="user.name"
+            class="form-control"
+          />
+        </td>
+        <td>
+          <span *ngIf="editingUserId !== user.id">{{ user.email }}</span>
+          <input
+            *ngIf="editingUserId === user.id"
+            type="email"
+            [(ngModel)]="user.email"
+            class="form-control"
+          />
+        </td>
+        <td>
+          <span *ngIf="editingUserId !== user.id">{{ user.role }}</span>
+          <select
+            *ngIf="editingUserId === user.id"
+            [(ngModel)]="user.role"
+            class="form-control"
+          >
+            <option value="Admin">Admin</option>
+            <option value="Editor">Editor</option>
+            <option value="Viewer">Viewer</option>
+          </select>
+        </td>
+        <td>
+          <button
+            class="btn btn-danger btn-sm"
+            (click)="confirmDelete(user.id)"
+            *ngIf="editingUserId !== user.id"
+          >
+            Delete
+          </button>
+          <button
+            class="btn btn-primary btn-sm"
+            (click)="startEdit(user.id)"
+            *ngIf="editingUserId !== user.id"
+          >
+            Edit
+          </button>
+          <button
+            class="btn btn-success btn-sm"
+            (click)="saveEdit()"
+            *ngIf="editingUserId === user.id"
+          >
+            Save
+          </button>
+          <button
+            class="btn btn-secondary btn-sm"
+            (click)="cancelEdit()"
+            *ngIf="editingUserId === user.id"
+          >
+            Cancel
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <nav>
+    <ul class="pagination">
+      <li
+        class="page-item"
+        [class.disabled]="currentPage === 1"
+        (click)="changePage(currentPage - 1)"
+      >
+        <a class="page-link">Previous</a>
+      </li>
+      <li
+        *ngFor="let page of [].constructor(totalPages); let i = index"
+        class="page-item"
+        [class.active]="currentPage === i + 1"
+        (click)="changePage(i + 1)"
+      >
+        <a class="page-link">{{ i + 1 }}</a>
+      </li>
+      <li
+        class="page-item"
+        [class.disabled]="currentPage === totalPages"
+        (click)="changePage(currentPage + 1)"
+      >
+        <a class="page-link">Next</a>
+      </li>
+    </ul>
+  </nav>
+
+  <div
+    class="modal"
+    tabindex="-1"
+    role="dialog"
+    [class.show]="modalVisible"
+    [style.display]="modalVisible ? 'block' : 'none'"
+  >
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirm Delete</h5>
+          <button type="button" class="close" (click)="cancelDelete()">
+            <span>&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this user?</p>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-danger" (click)="deleteUser()">Yes</button>
+          <button class="btn btn-secondary" (click)="cancelDelete()">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
