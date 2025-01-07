@@ -5,7 +5,7 @@
 1. Clone the repository:
    ```bash
 2. Navigate to the project directory:
-    cd angular-admin-panel
+    cd admin-panel
 3. Install dependencies:
     npm install
 
